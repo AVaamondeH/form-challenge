@@ -4,7 +4,7 @@ const { responseObj } = require("../utils/response")
 const get_form_handler = async (req, res) => {
     try {
         const response = await get_form()
-        if(!response) throw Error("Service unavailable")
+        if(!response.length) throw Error("Empty database")
         return res.status(200).json(responseObj("Data acquire succesfully", response))
 
     } catch (error) {
