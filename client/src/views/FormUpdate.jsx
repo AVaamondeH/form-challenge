@@ -6,13 +6,13 @@ import { useEffect } from "react";
 
 
 function FormUpdate() {
-    const {id} = useSelector(state => state.data)
-    const {json} = useSelector(state => state.data)
+    const { id } = useSelector(state => state.data);
+    const { json } = useSelector(state => state.data);
     const dispatch = useDispatch();
-    console.log(json);
 
     useEffect(() => {
         dispatch(get_form(id))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (!json.length) {
@@ -21,11 +21,11 @@ function FormUpdate() {
 
     return (
         <>
-        <h2 className="text-6xl">Respuestas</h2>
-        <h5 className="text-lg">Puedes actualizar si te equivocaste</h5>
-        <Form 
-        json= {json}
-        update = {true} />
+            <h2 className="text-6xl p-3">Respuestas</h2>
+            <h5 className="text-lg">Puedes actualizar si te equivocaste</h5>
+            <Form
+                json={json}
+                update={true} />
         </>
     );
 }

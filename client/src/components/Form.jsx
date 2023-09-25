@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import axios from 'axios';
@@ -9,20 +10,18 @@ import { endpoint } from "../../utils/endpoint";
 
 function Form({ json, update }) {
     const [inputs, setInputs] = useState({});
+    const [required, setRequired] = useState({});
     const dispatch = useDispatch()
     const navigate = useNavigate();
     useEffect(() => {
-        console.log(json);
         const initialInputs = json.reduce((acc, item) => {
             const { name, type } = item;
-
-            console.log(item[name]); // Esto mostrará el valor de la propiedad si existe
-            if (name in item) { // Verifica si la propiedad existe en el objeto item
-                acc[name] = item[name]; // Asigna el valor de la propiedad a acc
+            if (name in item) {
+                acc[name] = item[name];
             } else if (name) {
                 switch (type) {
                     case "checkbox":
-                        acc[name] = false;
+                        acc[name] = true;
                         break;
                     default:
                         acc[name] = "";
@@ -31,12 +30,19 @@ function Form({ json, update }) {
             }
             return acc;
         }, {});
+        const needed = json.reduce((acc, item) => {
+            const { name, required } = item;
+            if (required) {
+                acc[name] = required;
+            }
+            return acc;
+        }, {});
 
         setInputs(initialInputs);
+        setRequired(needed)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    console.log(inputs);
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setInputs((prevInputs) => ({
@@ -66,12 +72,25 @@ function Form({ json, update }) {
 
     const onSubmit = async (event) => {
         event.preventDefault();
+        let verify = false
+        for (const value in required) {
+            if (inputs.hasOwnProperty(value) && !inputs[value]) {
+                verify = true
+            }
+        }
+        if (verify) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Verifica que todos los campos requeridos esten llenos',
+            })
+            return;
+        }
         try {
             if (update) {
                 const form = JSON.parse(JSON.stringify(json));
                 form.forEach((item) => {
                     const { name } = item;
-                    // eslint-disable-next-line no-prototype-builtins
                     if (inputs.hasOwnProperty(name)) {
                         item[name] = inputs[name];
                     }
@@ -79,7 +98,6 @@ function Form({ json, update }) {
                 const data = {
                     data: form
                 }
-                console.log(data);
                 const send = await axios.post(`${endpoint}`, data)
                 dispatch(set_id(send.data.data.id))
                 Swal.fire({
@@ -88,7 +106,7 @@ function Form({ json, update }) {
                     icon: 'success'
                 }).then(function () {
                     // Redirect the user
-                    navigate("/update");
+                    window.location.href = "/"
                 });
             } else {
                 const form = json.map(item => {
@@ -101,7 +119,6 @@ function Form({ json, update }) {
                 const data = {
                     data: form
                 }
-                console.log(endpoint);
                 const send = await axios.post(`${endpoint}`, data)
                 dispatch(set_id(send.data.data.id))
                 Swal.fire({
@@ -115,20 +132,19 @@ function Form({ json, update }) {
             }
 
         } catch (error) {
-            console.log(error);
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Algo paso enviando tu respuesta, verifica que los datos esten correctos',
+                text: 'Algo paso enviando tu respuesta, intentalo mas tarde',
             })
         }
     }
+
     return (
         <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-            <p className="text-red-600">Los elementos marcados con * son obligatorios</p>
+            <p className="text-red-600 p-5">Los elementos marcados con * son obligatorios</p>
             {json.map((item) => {
                 const { type, label, name, required, options } = item;
-
                 switch (type) {
                     case "select":
                         return (

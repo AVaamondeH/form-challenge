@@ -9,10 +9,10 @@ function App() {
 
   return (
     <>
-    <Routes>
-      <Route path='/' element={<FormView/>} />
-      <Route path='/update' element={<FormUpdate />} />
-    </Routes>
+      <Routes>
+        <Route path='/' element={<FormView />} />
+        <Route path='/update' element={<FormUpdate />} />
+      </Routes>
     </>
   )
 }
