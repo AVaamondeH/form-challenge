@@ -3,7 +3,8 @@ const { responseObj } = require("../utils/response");
 
 const post_form_handler = async(req, res) => {
     try {
-        const data = req.body;
+        const { data } = req.body;
+        if(!data) throw new Error("Missing Data")
         const response = await post_form(data);
         if(!response) throw Error("Service unavailable")
         return res.status(200).json(responseObj("Form created succesfully", response))

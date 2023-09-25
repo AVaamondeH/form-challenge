@@ -1,7 +1,7 @@
 const { delete_form } = require("../controllers/delete_form.controller")
 const { responseObj } = require("../utils/response")
 
-const get_form_handler = async (req, res) => {
+const delete_form_handler = async (req, res) => {
     try {
         const {id} = req.query
         const response = await delete_form(id)
@@ -15,5 +15,5 @@ const get_form_handler = async (req, res) => {
 }
 
 module.exports ={ 
-    get_form_handler
+    delete_form_handler
 };
