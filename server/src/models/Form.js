@@ -6,7 +6,7 @@ module.exports = (database) => {
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
-            defaultValue: uuidv4()
+            defaultValue: () => uuidv4()
         },
         json: {
             type: DataTypes.JSON,
