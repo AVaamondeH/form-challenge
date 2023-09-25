@@ -1,3 +1,9 @@
+# Ignorar package-lock.json en la carpeta server
+/server/package-lock.json
+
+# Ignorar package-lock.json en la carpeta client
+/client/package-lock.json
+
 # Logs
 logs
 *.log
