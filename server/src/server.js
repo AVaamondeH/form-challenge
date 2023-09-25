@@ -9,7 +9,7 @@ server.use(express.json());
 server.use(cors());
 server.use(router);
 server.use((req, res, next) => {
-    const allowedOrigins = ['http://localhost:3000', 'https://selpro-soluciones.netlify.app'];
+    const allowedOrigins = ['http://localhost:3000', 'https://form-challenge07.netlify.app/'];
     const origin = req.headers.origin;
   
     if (allowedOrigins.includes(origin)) {
